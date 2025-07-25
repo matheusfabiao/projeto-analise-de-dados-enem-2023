@@ -1,0 +1,31 @@
+[project]
+name = "analise-exploratoria"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.3",
+    "nbformat>=5.10.4",
+    "numpy>=2.3.1",
+    "openai>=1.97.1",
+    "pandas>=2.3.1",
+    "plotly>=6.2.0",
+    "polars>=1.31.0",
+    "python-dotenv>=1.1.1",
+    "scipy>=1.16.0",
+    "streamlit>=1.46.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "ruff>=0.12.3",
+    "taskipy>=1.14.1",
+]
+doc = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.15",
+    "mkdocstrings>=0.29.1",
+    "mkdocstrings-python>=1.16.12",
+]

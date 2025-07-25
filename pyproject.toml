@@ -19,7 +19,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "black>=25.1.0",
     "ipykernel>=6.29.5",
+    "isort>=6.0.1",
     "ruff>=0.12.3",
     "taskipy>=1.14.1",
 ]

@@ -1,27 +1,26 @@
-from openai import OpenAI
-from dotenv import load_dotenv
 import os
 
+from dotenv import load_dotenv
+from openai import OpenAI
+
 load_dotenv(
-    dotenv_path='secrets/.env',
+    dotenv_path="secrets/.env",
 )
 
 client = OpenAI(
-    api_key=os.getenv('OPENAI_API_KEY'),
-    base_url=os.getenv(
-        'OPENAI_API_BASE',
-        'https://api.openai.com/v1/'
-    ),
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1/"),
 )
+
 
 def get_response(prompt: str) -> str:
     """
     Generates a response from the OpenAI model based on the given prompt.
 
-    This function interacts with the OpenAI API using a specified model to 
-    generate a chat completion. It sends a system message indicating the role 
-    of the assistant as an educational analyst specializing in the ENEM 
-    and a user message based on the provided prompt. The function returns 
+    This function interacts with the OpenAI API using a specified model to
+    generate a chat completion. It sends a system message indicating the role
+    of the assistant as an educational analyst specializing in the ENEM
+    and a user message based on the provided prompt. The function returns
     the content of the model's response.
 
     Args:
@@ -32,19 +31,16 @@ def get_response(prompt: str) -> str:
     """
 
     response = client.chat.completions.create(
-            model=os.getenv('OPENAI_AI_MODEL', 'gpt-4o'),
-            messages=[
-                {
+        model=os.getenv("OPENAI_AI_MODEL", "gpt-4o"),
+        messages=[
+            {
                 "role": "system",
-                "content": "Você é um analista educacional especializado no ENEM."
-                },
-                {
-                "role": "user",
-                "content": prompt
-                }
-            ],
-            temperature=0,
-            max_tokens=1000,
-        )
+                "content": "Você é um analista educacional especializado no ENEM.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0,
+        max_tokens=1000,
+    )
 
     return response.choices[0].message.content

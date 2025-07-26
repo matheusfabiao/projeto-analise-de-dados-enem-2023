@@ -9,9 +9,17 @@ from src.services.openai_service import get_response
 from src.utils.prompt import generate_prompt
 
 
-# Carregar dados com cache eficiente
+# Carregar dados
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_data():
+    """
+    Loads the ENEM 2023 data from a CSV file, optimizes data types by converting
+    object columns to category, and caches the result for 3600 seconds.
+
+    Returns:
+        pd.DataFrame: The loaded and optimized data.
+    """
+
     df = pd.read_csv("./data/output/enem_2023_tratado.csv")
 
     # Otimização de tipos de dados
@@ -24,6 +32,25 @@ def load_data():
 # Funções de visualização
 @st.cache_data(ttl=600)
 def generate_comparison_chart(_df, area_col, chart_type, selected_area):
+    """
+    Gera um gráfico comparativo para uma coluna específica do ENEM.
+
+    Parameters
+    ----------
+    _df : pd.DataFrame
+        DataFrame com os dados do ENEM.
+    area_col : str
+        Nome da coluna a ser analisada.
+    chart_type : str
+        Tipo de gráfico a ser gerado.
+    selected_area : str
+        Nome da área do conhecimento analisada.
+
+    Returns
+    -------
+    fig : plotly.graph_objs.Figure
+        Gráfico comparativo gerado.
+    """
     if chart_type == "Boxplot Simplificado":
         # Amostra para melhor performance
         sample_df = _df.sample(min(5000, len(_df)), random_state=42)
@@ -70,6 +97,25 @@ def generate_comparison_chart(_df, area_col, chart_type, selected_area):
 
 @st.cache_data(ttl=600)
 def generate_area_comparison(_df, area_options):
+    """
+    Gera um gráfico comparativo entre as diferentes áreas do conhecimento, mostrando
+    a média e o percentil 50% das notas em cada área para os alunos com e sem acesso
+    à internet em casa.
+
+    Parameters
+    ----------
+    _df : pd.DataFrame
+        DataFrame com os dados do ENEM.
+    area_options : dict
+        Dicionário com as áreas do conhecimento como chaves e os respectivos nomes
+        das colunas como valores.
+
+    Returns
+    -------
+    fig : plotly.graph_objs.Figure
+        Gráfico comparativo gerado.
+    """
+
     # Pré-agregação para performance
     area_stats = []
     for area_name, area_col in area_options.items():
@@ -118,6 +164,23 @@ def generate_area_comparison(_df, area_options):
 # Função para gerar sumário com IA
 @st.cache_data(ttl=3600)
 def generate_ai_summary(data_summary, selected_area, chart_type):
+    """
+    Gera um sumário automático baseado em uma análise de dados do ENEM.
+
+    Parameters
+    ----------
+    data_summary : pandas.DataFrame
+        Resumo estatístico dos dados em forma de DataFrame.
+    selected_area : str
+        Nome da área do conhecimento analisada.
+    chart_type : str
+        Tipo de visualização utilizada.
+
+    Returns
+    -------
+    str
+        Sumário gerado pela IA.
+    """
     try:
         prompt = generate_prompt(data_summary, selected_area, chart_type)
         logger.info("Prompt gerado com sucesso.")
